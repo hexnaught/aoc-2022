@@ -1,5 +1,5 @@
 use common;
-use std::{env, str::FromStr};
+use std::str::FromStr;
 
 // A | X is rock
 // B | Y is paper
@@ -101,17 +101,8 @@ impl FromStr for RPSShape {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    println!("{:?}", args);
-
-    if args.len() != 2 as usize {
-        eprintln!("invalid number of arguments");
-        return;
-    }
-
-    let input = &args[1];
-
-    let input_vec = match common::read_file_lines::<String>(input) {
+    let input_path = common::get_filepath_arg().unwrap();
+    let input_vec = match common::read_file_lines::<String>(input_path.as_str()) {
         Ok(contents) => contents,
         Err(error) => panic!("Problem reading the file contents: {:?}", error),
     };
