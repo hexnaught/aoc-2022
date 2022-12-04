@@ -12,10 +12,11 @@ use std::str::FromStr;
 // Score per shape, Rock = 1, Paper = 2, Scissors = 3
 // Score per game, Lost = 0, Draw = 3, Win = 6
 
+#[derive(Copy, Clone)]
 enum RPSShape {
     Rock,
     Paper,
-    Scissors
+    Scissors,
 }
 
 impl RPSShape {
@@ -23,7 +24,7 @@ impl RPSShape {
         return match self {
             RPSShape::Rock => 1,
             RPSShape::Paper => 2,
-            RPSShape::Scissors => 3
+            RPSShape::Scissors => 3,
         };
     }
 
@@ -31,7 +32,7 @@ impl RPSShape {
         return match self {
             RPSShape::Rock => RPSShape::Scissors,
             RPSShape::Paper => RPSShape::Rock,
-            RPSShape::Scissors => RPSShape::Paper
+            RPSShape::Scissors => RPSShape::Paper,
         };
     }
 
@@ -39,16 +40,12 @@ impl RPSShape {
         return match self {
             RPSShape::Rock => RPSShape::Paper,
             RPSShape::Paper => RPSShape::Scissors,
-            RPSShape::Scissors => RPSShape::Rock
+            RPSShape::Scissors => RPSShape::Rock,
         };
     }
 
     fn to_draw(&self) -> RPSShape {
-        return match self {
-            RPSShape::Rock => RPSShape::Rock,
-            RPSShape::Paper => RPSShape::Paper,
-            RPSShape::Scissors => RPSShape::Scissors
-        };
+        return self.clone();
     }
 
     fn outcome_required(&self, result_needed: &str) -> RPSShape {
@@ -56,28 +53,18 @@ impl RPSShape {
             "X" => self.to_lose(),
             "Y" => self.to_draw(),
             "Z" => self.to_win(),
-            _ => self.to_draw()
-        }
+            _ => self.to_draw(),
+        };
     }
 
     fn versus(&self, other: &RPSShape) -> i32 {
-        // return match (self, other) {
-        //     (RPSShape::Rock, RPSShape::Scissors) => 6,
-        //     (_, _) if self.score() > other.score() => 6,
-        //     (_, _) if self.score() == other.score() => 3,
-        //     (_, _) if self.score() < other.score() => 0,
-        //     _ => 0 // realistically this would be an error thrown and handled?
-        // }
         return match (self, other) {
-            (RPSShape::Rock, RPSShape::Rock) => 3,
-            (RPSShape::Rock, RPSShape::Paper) => 0,
             (RPSShape::Rock, RPSShape::Scissors) => 6,
-            (RPSShape::Paper, RPSShape::Rock) => 6,
-            (RPSShape::Paper, RPSShape::Paper) => 3,
-            (RPSShape::Paper, RPSShape::Scissors) => 0,
             (RPSShape::Scissors, RPSShape::Rock) => 0,
-            (RPSShape::Scissors, RPSShape::Paper) => 6,
-            (RPSShape::Scissors, RPSShape::Scissors) => 3,
+            (_, _) if self.score() > other.score() => 6,
+            (_, _) if self.score() == other.score() => 3,
+            (_, _) if self.score() < other.score() => 0,
+            _ => 0, // realistically this would be an error thrown and handled?
         };
     }
 }
@@ -89,13 +76,10 @@ impl FromStr for RPSShape {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         return match s {
-            "A" => Ok(RPSShape::Rock),
-            "B" => Ok(RPSShape::Paper),
-            "C" => Ok(RPSShape::Scissors),
-            "X" => Ok(RPSShape::Rock),
-            "Y" => Ok(RPSShape::Paper),
-            "Z" => Ok(RPSShape::Scissors),
-            _ => Err(ShapeScoreError)
+            "A" | "X" => Ok(RPSShape::Rock),
+            "B" | "Y" => Ok(RPSShape::Paper),
+            "C" | "Z" => Ok(RPSShape::Scissors),
+            _ => Err(ShapeScoreError),
         };
     }
 }
