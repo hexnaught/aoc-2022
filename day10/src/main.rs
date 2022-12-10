@@ -89,15 +89,6 @@ impl Program {
     }
 
     fn draw_pixel(&mut self) {
-        print!(
-            " // PC: {:?} : CyclePC: {:?} | Sprite: [{:?} {:?} {:?}]",
-            self.pc,
-            self.cycle_pc,
-            self.x_reg - 1,
-            self.x_reg,
-            self.x_reg + 1
-        );
-
         if self.cycle_pc >= self.x_reg - 1 && self.cycle_pc <= self.x_reg + 1 {
             self.pixel_buffer.push('#')
         } else {
@@ -128,12 +119,6 @@ fn part_one(input: &Vec<String>) -> i32 {
 
     for instruction in input.iter() {
         let op = OP::from_str(&instruction).expect("invalid opcode/instruction");
-
-        println!(
-            "PC: {} | X: {} | SIG: {} // OP: {:?}",
-            program.pc, program.x_reg, program.signal_strength, op,
-        );
-
         program.execute_op(op);
     }
 
